@@ -28,20 +28,20 @@ public class GithubControllerTest {
   @Test
   public void getRepositoryDetailsShouldReturnData() throws Exception {
     this.mockMvc
-        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2/repo"))
+        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2/github-service"))
             .accept(APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.fullName", is("limak2/repo")))
+        .andExpect(jsonPath("$.fullName", is("limak2/github-service")))
         .andExpect(jsonPath("$.description ", nullValue()))
-        .andExpect(jsonPath("$.cloneUrl ", is("https://github.com/limak2/repo.git")))
+        .andExpect(jsonPath("$.cloneUrl ", is("https://github.com/limak2/github-service.git")))
         .andExpect(jsonPath("$.starts ", is(0)))
-        .andExpect(jsonPath("$.createdAt ", is("2017-05-05T11:22:19")));
+        .andExpect(jsonPath("$.createdAt ", is("2018-05-14T07:00:54")));
   }
 
   @Test
   public void getRepositoryDetailsShouldReturnNotFoundForIncorrectOwner() throws Exception {
     this.mockMvc
-        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2asdf123/repo"))
+        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2asdf123/github-service"))
             .accept(APPLICATION_JSON_UTF8))
         .andExpect(status().isNotFound());
   }
@@ -50,7 +50,7 @@ public class GithubControllerTest {
   public void getRepositoryDetailsShouldReturnNotFoundForIncorrectRepositoryName() throws
       Exception {
     this.mockMvc
-        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2/repo123"))
+        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2/github-service123"))
             .accept(APPLICATION_JSON_UTF8))
         .andExpect(status().isNotFound());
   }
