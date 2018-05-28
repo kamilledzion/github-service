@@ -1,4 +1,4 @@
-package pl.allegro.model;
+package pl.github.model;
 
 import static java.util.Objects.hash;
 

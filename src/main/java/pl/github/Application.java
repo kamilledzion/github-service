@@ -1,4 +1,4 @@
-package pl.allegro;
+package pl.github;
 
 import static org.springframework.boot.SpringApplication.run;
 

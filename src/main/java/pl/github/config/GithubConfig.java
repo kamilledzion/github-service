@@ -1,4 +1,4 @@
-package pl.allegro.config;
+package pl.github.config;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;

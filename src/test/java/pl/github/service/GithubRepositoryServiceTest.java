@@ -1,4 +1,4 @@
-package pl.allegro.service;
+package pl.github.service;
 
 import static java.util.Optional.empty;
 import static org.hamcrest.CoreMatchers.is;
@@ -7,8 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static pl.allegro.TestGithubRepositoryGenerator.OWNER;
-import static pl.allegro.TestGithubRepositoryGenerator.REPOSITORY_NAME;
+import static pl.github.TestGithubRepositoryGenerator.OWNER;
+import static pl.github.TestGithubRepositoryGenerator.REPOSITORY_NAME;
 
 import java.util.Optional;
 import org.junit.Test;
@@ -20,8 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import pl.allegro.TestGithubRepositoryGenerator;
-import pl.allegro.model.GithubRepository;
+import pl.github.TestGithubRepositoryGenerator;
+import pl.github.model.GithubRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

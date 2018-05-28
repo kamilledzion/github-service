@@ -1,4 +1,4 @@
-package pl.allegro.service;
+package pl.github.service;
 
 import java.util.Optional;
 

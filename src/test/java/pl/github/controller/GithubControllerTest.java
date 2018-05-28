@@ -1,4 +1,4 @@
-package pl.allegro.controller;
+package pl.github.controller;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -10,9 +10,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static pl.allegro.TestGithubRepositoryGenerator.OWNER;
-import static pl.allegro.TestGithubRepositoryGenerator.PATH;
-import static pl.allegro.TestGithubRepositoryGenerator.REPOSITORY_NAME;
+import static pl.github.TestGithubRepositoryGenerator.OWNER;
+import static pl.github.TestGithubRepositoryGenerator.PATH;
+import static pl.github.TestGithubRepositoryGenerator.REPOSITORY_NAME;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -23,9 +23,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.allegro.TestGithubRepositoryGenerator;
-import pl.allegro.model.ErrorResponse;
-import pl.allegro.service.GithubRepositoryService;
+import pl.github.TestGithubRepositoryGenerator;
+import pl.github.model.ErrorResponse;
+import pl.github.service.GithubRepositoryService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

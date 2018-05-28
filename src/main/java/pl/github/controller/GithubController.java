@@ -1,4 +1,4 @@
-package pl.allegro.controller;
+package pl.github.controller;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -18,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.allegro.model.ErrorResponse;
-import pl.allegro.service.RepositoryService;
+import pl.github.model.ErrorResponse;
+import pl.github.service.RepositoryService;
 
 @Api(value = "github-controller", description = "Operations available on Github repository.")
 @ApiResponses(value = {

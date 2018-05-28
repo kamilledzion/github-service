@@ -1,4 +1,4 @@
-package pl.allegro;
+package pl.github;
 
 import static java.time.LocalDateTime.of;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.allegro.model.GithubRepository;
+import pl.github.model.GithubRepository;
 
 @Component
 public final class TestGithubRepositoryGenerator {

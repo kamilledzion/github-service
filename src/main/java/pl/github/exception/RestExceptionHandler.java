@@ -1,4 +1,4 @@
-package pl.allegro.exception;
+package pl.github.exception;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import pl.allegro.model.ErrorResponse;
+import pl.github.model.ErrorResponse;
 
 @ControllerAdvice
 public class RestExceptionHandler {

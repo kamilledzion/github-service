@@ -1,4 +1,4 @@
-package pl.allegro.service;
+package pl.github.service;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import pl.allegro.model.GithubRepository;
+import pl.github.model.GithubRepository;
 
 @Service
 public class GithubRepositoryService implements RepositoryService {

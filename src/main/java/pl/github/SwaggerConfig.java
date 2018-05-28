@@ -1,4 +1,4 @@
-package pl.allegro;
+package pl.github;
 
 import static com.google.common.base.Predicates.not;
 
@@ -34,7 +34,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         .title("Github repository API")
         .description("Github repository API description.")
         .version("1.0")
-        .contact(new Contact("Kamil", "www.allegro.pl", "kamil@allegro.pl"))
+        .contact(new Contact("Kamil", "www.github.pl", "kamil@github.pl"))
         .build();
   }
 

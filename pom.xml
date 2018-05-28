@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>pl.allegro</groupId>
+  <groupId>pl.github</groupId>
   <artifactId>github-service</artifactId>
   <version>1.0</version>
 
@@ -74,7 +74,9 @@
             </goals>
             <configuration>
               <excludes>
-                <exclude>pl/allegro/model/*</exclude>
+                <exclude>pl/github/model/*</exclude>
+                <exclude>pl/github/Application.*</exclude>
+                <exclude>pl/github/SwaggerConfig.*</exclude>
               </excludes>
             </configuration>
           </execution>
@@ -98,9 +100,9 @@
                 </rule>
               </rules>
               <excludes>
-                <exclude>pl/allegro/model/*</exclude>
-                <exclude>pl/allegro/Application.*</exclude>
-                <exclude>pl/allegro/SwaggerConfig.*</exclude>
+                <exclude>pl/github/model/*</exclude>
+                <exclude>pl/github/Application.*</exclude>
+                <exclude>pl/github/SwaggerConfig.*</exclude>
               </excludes>
             </configuration>
           </execution>
