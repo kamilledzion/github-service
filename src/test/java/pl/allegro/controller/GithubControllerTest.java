@@ -1,57 +1,93 @@
 package pl.allegro.controller;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static pl.allegro.TestGithubRepositoryGenerator.OWNER;
+import static pl.allegro.TestGithubRepositoryGenerator.PATH;
+import static pl.allegro.TestGithubRepositoryGenerator.REPOSITORY_NAME;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import pl.allegro.TestGithubRepositoryGenerator;
+import pl.allegro.model.ErrorResponse;
+import pl.allegro.service.GithubRepositoryService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class GithubControllerTest {
 
-  private static final String DEFAULT_PATH = "/repositories";
-
+  @Autowired
+  private TestGithubRepositoryGenerator githubRepositoryGenerator;
+  @Autowired
+  private ObjectMapper objectMapper;
   @Autowired
   private MockMvc mockMvc;
+  @MockBean
+  private GithubRepositoryService githubRepositoryService;
 
   @Test
   public void getRepositoryDetailsShouldReturnData() throws Exception {
+    when(githubRepositoryService.getRepositoryDetails(OWNER, REPOSITORY_NAME))
+        .thenReturn(of(githubRepositoryGenerator.getGithubRepository()));
+
     this.mockMvc
-        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2/github-service"))
+        .perform(get(PATH)
             .accept(APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.fullName", is("limak2/github-service")))
-        .andExpect(jsonPath("$.description ", nullValue()))
-        .andExpect(jsonPath("$.cloneUrl ", is("https://github.com/limak2/github-service.git")))
-        .andExpect(jsonPath("$.starts ", is(0)))
-        .andExpect(jsonPath("$.createdAt ", is("2018-05-14T07:00:54")));
-  }
-
-  @Test
-  public void getRepositoryDetailsShouldReturnNotFoundForIncorrectOwner() throws Exception {
-    this.mockMvc
-        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2asdf123/github-service"))
-            .accept(APPLICATION_JSON_UTF8))
-        .andExpect(status().isNotFound());
+        .andExpect(content().string(is(githubRepositoryGenerator.getGithubRepositoryAsString())));
   }
 
   @Test
   public void getRepositoryDetailsShouldReturnNotFoundForIncorrectRepositoryName() throws
       Exception {
+
+    when(githubRepositoryService.getRepositoryDetails(OWNER, REPOSITORY_NAME))
+        .thenReturn(empty());
+
+    String errorResponse = objectMapper.writeValueAsString(
+        new ErrorResponse(NOT_FOUND.value(),
+            "Repository: " + REPOSITORY_NAME + " for owner: " + OWNER + " not found."));
+
     this.mockMvc
-        .perform(MockMvcRequestBuilders.get(DEFAULT_PATH.concat("/limak2/github-service123"))
+        .perform(get(PATH)
             .accept(APPLICATION_JSON_UTF8))
-        .andExpect(status().isNotFound());
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(is(errorResponse)));
+  }
+
+  @Test
+  public void getRepositoryDetailsShouldReturnInternalServerErrorForUnexpectedError() throws
+      Exception {
+
+    when(githubRepositoryService.getRepositoryDetails(OWNER, REPOSITORY_NAME))
+        .thenThrow(new NullPointerException());
+
+    String errorResponse = objectMapper.writeValueAsString(
+        new ErrorResponse(INTERNAL_SERVER_ERROR.value(),
+            "Unexpected error while accessing repository: " + REPOSITORY_NAME
+                + " for owner: " + OWNER + "."));
+
+    this.mockMvc
+        .perform(
+            get(PATH)
+                .accept(APPLICATION_JSON_UTF8))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string(is(errorResponse)));
   }
 }

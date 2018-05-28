@@ -2,7 +2,7 @@ package pl.allegro.service;
 
 import java.util.Optional;
 
-public interface RepositoryService<T> {
+public interface RepositoryService {
 
-  Optional<T> getRepositoryDetails(String owner, String repositoryName);
+  Optional getRepositoryDetails(String owner, String repositoryName);
 }

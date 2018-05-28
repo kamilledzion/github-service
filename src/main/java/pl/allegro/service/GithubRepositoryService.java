@@ -1,57 +1,57 @@
 package pl.allegro.service;
 
-import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
-import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import pl.allegro.model.GithubRepository;
 
 @Service
-public class GithubRepositoryService implements RepositoryService<GithubRepository> {
+public class GithubRepositoryService implements RepositoryService {
 
   private final Logger logger = LoggerFactory.getLogger(GithubRepositoryService.class);
 
-  private static final String USERS_PATH = "users";
   private static final String REPOS_PATH = "repos";
   private static final String PATH_SEPARATOR = "/";
 
-  @Value("${githubURL}")
-  private String githubURL;
   private RestTemplate restTemplate;
+  private String githubURL;
 
-  public GithubRepositoryService() {
-    this.restTemplate = new RestTemplate();
+  @Autowired
+  public GithubRepositoryService(RestTemplate restTemplate,
+      @Value("${githubURL}") String githubURL) {
+
+    this.restTemplate = restTemplate;
+    this.githubURL = githubURL;
   }
 
   public Optional<GithubRepository> getRepositoryDetails(String owner, String repositoryName) {
     logger
-        .debug("Getting repository details for owner: {} and repositoryName: {} from Github", owner,
-            repositoryName);
+        .debug("Getting repository: {} details for owner: {} from github: {}", repositoryName,
+            owner, githubURL);
 
-    GithubRepository[] result;
     try {
-      result = restTemplate
-          .getForObject(githubURL.concat(PATH_SEPARATOR)
-                  .concat(USERS_PATH).concat(PATH_SEPARATOR)
-                  .concat(owner).concat(PATH_SEPARATOR)
-                  .concat(REPOS_PATH),
-              GithubRepository[].class);
-    } catch (Exception e) {
-      logger.error("Error while accessing github repository, owner: {}", owner, e);
+      return ofNullable(
+          restTemplate.getForObject(createURL(owner, repositoryName), GithubRepository.class));
+
+    } catch (HttpClientErrorException e) {
+      logger.info("Repository: {} for owner: {} not found.", repositoryName, owner, e);
 
       return empty();
     }
+  }
 
-    return asList(result)
-        .parallelStream()
-        .filter(Objects::nonNull)
-        .filter(repo -> repositoryName.equals(repo.getName()))
-        .findAny();
+  private String createURL(String owner, String repositoryName) {
+    return githubURL + PATH_SEPARATOR
+        + REPOS_PATH + PATH_SEPARATOR
+        + owner + PATH_SEPARATOR
+        + repositoryName;
   }
 }

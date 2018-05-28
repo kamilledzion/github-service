@@ -1,33 +1,32 @@
 package pl.allegro.model;
 
-import static java.time.LocalDateTime.parse;
-import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
-import static java.util.Objects.nonNull;
+import static java.util.Objects.hash;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-public class GithubRepository {
+public final class GithubRepository {
 
-  private String name;
-  private String fullName;
-  private String description;
-  private String cloneUrl;
-  private int starts;
-  private LocalDateTime createdAt;
+  private final String name;
+  private final String fullName;
+  private final String description;
+  private final String cloneUrl;
+  private final int stars;
+  private final LocalDateTime createdAt;
 
   public GithubRepository(@JsonProperty("name") String name,
       @JsonProperty("full_name") String fullName, @JsonProperty("description") String description,
-      @JsonProperty("clone_url") String cloneUrl, @JsonProperty("stargazers_count") int starts,
-      @JsonProperty("created_at") String createdAt) {
+      @JsonProperty("clone_url") String cloneUrl, @JsonProperty("stargazers_count") int stars,
+      @JsonProperty("created_at") LocalDateTime createdAt) {
     this.name = name;
     this.fullName = fullName;
     this.description = description;
     this.cloneUrl = cloneUrl;
-    this.starts = starts;
-    this.createdAt = parse(createdAt, ISO_DATE_TIME);
+    this.stars = stars;
+    this.createdAt = createdAt;
   }
 
   @JsonIgnore
@@ -35,17 +34,9 @@ public class GithubRepository {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   @ApiModelProperty("Full name of repository")
   public String getFullName() {
     return fullName;
-  }
-
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
   }
 
   @ApiModelProperty("Repository description")
@@ -53,41 +44,41 @@ public class GithubRepository {
     return description;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
   @ApiModelProperty("Repository clone URL")
-  @JsonProperty("cloneUrl")
   public String getCloneUrl() {
     return cloneUrl;
   }
 
-  public void setCloneUrl(String cloneUrl) {
-    this.cloneUrl = cloneUrl;
-  }
-
   @ApiModelProperty("Stars amount")
-  public int getStarts() {
-    return starts;
+  public int getStars() {
+    return stars;
   }
 
-  public void setStarts(int starts) {
-    this.starts = starts;
-  }
-
-  @JsonIgnore
+  @ApiModelProperty("Date and time of creation")
   public LocalDateTime getCreatedAt() {
     return createdAt;
   }
 
-  @ApiModelProperty("Date and time of creation")
-  @JsonProperty("createdAt")
-  public String getCreatedAtAsString() {
-    return nonNull(createdAt) ? createdAt.format(ISO_DATE_TIME) : null;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GithubRepository that = (GithubRepository) o;
+    return stars == that.stars &&
+        Objects.equals(name, that.name) &&
+        Objects.equals(fullName, that.fullName) &&
+        Objects.equals(description, that.description) &&
+        Objects.equals(cloneUrl, that.cloneUrl) &&
+        Objects.equals(createdAt, that.createdAt);
   }
 
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
+  @Override
+  public int hashCode() {
+
+    return hash(name, fullName, description, cloneUrl, stars, createdAt);
   }
 }
