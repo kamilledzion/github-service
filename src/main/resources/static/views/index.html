@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Github Service</title>
+    </head>
+    <body ng-app="GithubController">
+        <hr/>
+        <div ng-controller="github">
+            <form novalidate>
+                username:<br/>
+                <input type="text" ng-model="username"><br/>
+                repository:<br/>
+                <input type="text" ng-model="repository"><br/>
+            </form>
+            <br/>
+            <button ng-click="getDetails()">Show</button>
+            <br/>
+            <h3>{{response.message}}</h3>
+            fullName: {{response.fullName}}<br/>
+            description: {{response.description}}<br/>
+            cloneUrl: {{response.cloneUrl}}<br/>
+            stars: {{response.stars}}<br/>
+            createdAt: {{response.createdAt}}<br/>
+        </div>
+        <hr/>
+    </body>
+    <script src="../js/lib/angular.min.js"></script>
+    <script src="../js/lib/ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <script src="../js/app/GithubController.js"></script>
+    <link rel="stylesheet" href="../css/app/app.css"/>
+</html>
