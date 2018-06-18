@@ -1,11 +1,8 @@
 package pl.github.controller;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -21,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.HttpClientErrorException;
 import pl.github.TestGithubRepositoryGenerator;
 import pl.github.model.ErrorResponse;
 import pl.github.service.GithubRepositoryService;
@@ -44,7 +43,7 @@ public class GithubControllerTest {
   @Test
   public void getRepositoryDetailsShouldReturnData() throws Exception {
     when(githubRepositoryService.getRepositoryDetails(OWNER, REPOSITORY_NAME))
-        .thenReturn(of(githubRepositoryGenerator.getGithubRepository()));
+        .thenReturn(githubRepositoryGenerator.getGithubRepository());
 
     this.mockMvc
         .perform(get(PATH)
@@ -58,17 +57,12 @@ public class GithubControllerTest {
       Exception {
 
     when(githubRepositoryService.getRepositoryDetails(OWNER, REPOSITORY_NAME))
-        .thenReturn(empty());
-
-    String errorResponse = objectMapper.writeValueAsString(
-        new ErrorResponse(NOT_FOUND.value(),
-            "Repository: " + REPOSITORY_NAME + " for owner: " + OWNER + " not found."));
+        .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
     this.mockMvc
         .perform(get(PATH)
             .accept(APPLICATION_JSON_UTF8))
-        .andExpect(status().isNotFound())
-        .andExpect(content().string(is(errorResponse)));
+        .andExpect(status().isNotFound());
   }
 
   @Test
@@ -80,8 +74,7 @@ public class GithubControllerTest {
 
     String errorResponse = objectMapper.writeValueAsString(
         new ErrorResponse(INTERNAL_SERVER_ERROR.value(),
-            "Unexpected error while accessing repository: " + REPOSITORY_NAME
-                + " for owner: " + OWNER + "."));
+            "Unexpected error!"));
 
     this.mockMvc
         .perform(

@@ -1,15 +1,10 @@
 package pl.github.service;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
-
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import pl.github.model.GithubRepository;
 
@@ -32,20 +27,11 @@ public class GithubRepositoryService implements RepositoryService {
     this.githubURL = githubURL;
   }
 
-  public Optional<GithubRepository> getRepositoryDetails(String owner, String repositoryName) {
-    logger
-        .debug("Getting repository: {} details for owner: {} from github: {}", repositoryName,
-            owner, githubURL);
+  public GithubRepository getRepositoryDetails(String owner, String repositoryName) {
+    logger.debug("Getting repository: {} details for owner: {} from github: {}",
+        repositoryName, owner, githubURL);
 
-    try {
-      return ofNullable(
-          restTemplate.getForObject(createURL(owner, repositoryName), GithubRepository.class));
-
-    } catch (HttpClientErrorException e) {
-      logger.info("Repository: {} for owner: {} not found.", repositoryName, owner, e);
-
-      return empty();
-    }
+    return restTemplate.getForObject(createURL(owner, repositoryName), GithubRepository.class);
   }
 
   private String createURL(String owner, String repositoryName) {

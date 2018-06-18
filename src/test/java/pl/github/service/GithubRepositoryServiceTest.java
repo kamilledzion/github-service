@@ -1,6 +1,5 @@
 package pl.github.service;
 
-import static java.util.Optional.empty;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,8 +9,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static pl.github.TestGithubRepositoryGenerator.OWNER;
 import static pl.github.TestGithubRepositoryGenerator.REPOSITORY_NAME;
 
-import java.util.Optional;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,6 +33,8 @@ public class GithubRepositoryServiceTest {
   private RestTemplate restTemplate;
   @InjectMocks
   private GithubRepositoryService githubRepositoryService;
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void getRepositoryDetailsShouldReturnData() {
@@ -40,20 +42,18 @@ public class GithubRepositoryServiceTest {
 
     when(restTemplate.getForObject(anyString(), any())).thenReturn(githubRepository);
 
-    Optional<GithubRepository> response = githubRepositoryService
+    GithubRepository response = githubRepositoryService
         .getRepositoryDetails(OWNER, REPOSITORY_NAME);
 
-    assertThat(response.get(), is(githubRepository));
+    assertThat(response, is(githubRepository));
   }
 
   @Test
-  public void getRepositoryDetailsShouldReturnEmptyOptionalForNotExistingRepo() {
+  public void getRepositoryDetailsShouldThrowHttpClientErrorExceptionForNotExistingRepo() {
     when(restTemplate.getForObject(anyString(), any()))
         .thenThrow(new HttpClientErrorException(NOT_FOUND));
 
-    Optional<GithubRepository> response = githubRepositoryService.getRepositoryDetails(OWNER,
-        REPOSITORY_NAME);
-
-    assertThat(response, is(empty()));
+    expectedException.expect(HttpClientErrorException.class);
+    githubRepositoryService.getRepositoryDetails(OWNER, REPOSITORY_NAME);
   }
 }

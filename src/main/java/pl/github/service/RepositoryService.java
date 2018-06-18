@@ -1,8 +1,8 @@
 package pl.github.service;
 
-import java.util.Optional;
+import pl.github.model.GithubRepository;
 
 public interface RepositoryService {
 
-  Optional getRepositoryDetails(String owner, String repositoryName);
+  GithubRepository getRepositoryDetails(String owner, String repositoryName);
 }

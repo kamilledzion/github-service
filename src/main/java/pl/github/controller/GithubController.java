@@ -1,7 +1,6 @@
 package pl.github.controller;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
@@ -18,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import pl.github.model.ErrorResponse;
 import pl.github.service.RepositoryService;
 
@@ -49,21 +49,20 @@ public class GithubController {
       @PathVariable("repository-name") String repositoryName) {
 
     try {
-      return (ResponseEntity) repositoryService
-          .getRepositoryDetails(owner, repositoryName)
-          .map(result -> ok(result))
-          .orElse(status(NOT_FOUND).body(
-              new ErrorResponse(NOT_FOUND.value(),
-                  "Repository: " + repositoryName + " for owner: " + owner + " not found.")));
+      return ok(repositoryService.getRepositoryDetails(owner, repositoryName));
 
+    } catch (HttpClientErrorException e) {
+      logger.info("Repository: {} for owner: {} not found.", repositoryName, owner, e);
+
+      return status(e.getStatusCode().value())
+          .body(new ErrorResponse(e.getStatusCode().value(), e.getStatusText()));
     } catch (Exception e) {
       logger.error(
           "Unexpected error while accessing repository: {} for owner: {}.",
           repositoryName, owner, e);
 
-      return status(INTERNAL_SERVER_ERROR).body(new ErrorResponse(INTERNAL_SERVER_ERROR.value(),
-          "Unexpected error while accessing repository: " + repositoryName
-              + " for owner: " + owner + "."));
+      return status(INTERNAL_SERVER_ERROR)
+          .body(new ErrorResponse(INTERNAL_SERVER_ERROR.value(), "Unexpected error!"));
     }
   }
 }
