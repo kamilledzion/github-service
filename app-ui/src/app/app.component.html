@@ -1,0 +1,22 @@
+<hr/>
+<div class="container-fluid">
+  Username:
+  <br/>
+  <input id="this.username" type="text" required [(ngModel)]="this.username" name="this.username"/>
+  <br/>
+  Repository name:
+  <br/>
+  <input id="this.repository" type="text" required [(ngModel)]="this.repository" name="this.repository"/>
+  <br/>
+  <br/>
+  <button (click)="getDetails(this.username, this.repository)">Show</button>
+  <br/>
+  <br/>
+  <h3>{{errorResponse.message}}</h3>
+  Full name: {{github.fullName}}<br/>
+  Description: {{github.description}}<br/>
+  Clone URL: {{github.cloneUrl}}<br/>
+  Stars: {{github.stars}}<br/>
+  Created at: {{github.createdAt}}<br/>
+</div>
+<hr/>

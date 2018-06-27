@@ -7,21 +7,19 @@
     <body ng-app="GithubController">
         <hr/>
         <div ng-controller="github">
-            <form novalidate>
-                username:<br/>
-                <input type="text" ng-model="username"><br/>
-                repository:<br/>
-                <input type="text" ng-model="repository"><br/>
-            </form>
+            Username:<br/>
+            <input type="text" ng-model="username"><br/>
+            Repository name:<br/>
+            <input type="text" ng-model="repository"><br/>
             <br/>
             <button ng-click="getDetails()">Show</button>
             <br/>
             <h3>{{response.message}}</h3>
-            fullName: {{response.fullName}}<br/>
-            description: {{response.description}}<br/>
-            cloneUrl: {{response.cloneUrl}}<br/>
-            stars: {{response.stars}}<br/>
-            createdAt: {{response.createdAt}}<br/>
+            Full name: {{response.fullName}}<br/>
+            Description: {{response.description}}<br/>
+            Clone URL: {{response.cloneUrl}}<br/>
+            Stars: {{response.stars}}<br/>
+            Created at: {{response.createdAt}}<br/>
         </div>
         <hr/>
     </body>
